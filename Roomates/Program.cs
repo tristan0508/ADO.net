@@ -1,12 +1,14 @@
-﻿using Roommates.Repositories;
+﻿using Roomates.Models;
+using Roommates.Repositories;
 using System;
 using System.Collections.Generic;
+
 
 namespace Roomates
 {
     class Program
     {
-       
+
         private const string CONNECTION_STRING = @"server=localhost\SQLExpress;database=Roommates;integrated security=true";
 
         static void Main(string[] args)
@@ -21,27 +23,58 @@ namespace Roomates
                 switch (selection)
                 {
                     case ("Show all rooms"):
-                        // Do stuff
+                        List<Room> rooms = roomRepo.GetAll();
+                        foreach (Room r in rooms)
+                        {
+                            Console.WriteLine($"{r.Id} - {r.Name} Max Occupancy({r.MaxOccupancy})");
+                        }
+                        Console.Write("Press any key to continue");
+                        Console.ReadKey();
                         break;
+
                     case ("Search for room"):
-                        // Do stuff
+                        Console.Write("Room Id: ");
+                        int id = int.Parse(Console.ReadLine());
+
+                        Room room = roomRepo.GetById(id);
+
+                        Console.WriteLine($"{room.Id} - {room.Name} Max Occupancy({room.MaxOccupancy})");
+                        Console.Write("Press any key to continue");
+                        Console.ReadKey();
                         break;
+
                     case ("Add a room"):
-                        // Do stuff
+                        Console.Write("Room name: ");
+                        string name = Console.ReadLine();
+
+                        Console.Write("Max occupancy: ");
+                        int max = int.Parse(Console.ReadLine());
+
+                        Room roomToAdd = new Room()
+                        {
+                            Name = name,
+                            MaxOccupancy = max
+                        };
+
+                        roomRepo.Insert(roomToAdd);
+
+                        Console.WriteLine($"{roomToAdd.Name} has been added and assigned an Id of {roomToAdd.Id}");
+                        Console.Write("Press any key to continue");
+                        Console.ReadKey();
                         break;
+
                     case ("Exit"):
                         runProgram = false;
                         break;
                 }
+
             }
 
-        }
+            static string GetMenuSelection()
+            {
+                Console.Clear();
 
-        static string GetMenuSelection()
-        {
-            Console.Clear();
-
-            List<string> options = new List<string>()
+                List<string> options = new List<string>()
         {
             "Show all rooms",
             "Search for room",
@@ -49,29 +82,30 @@ namespace Roomates
             "Exit"
         };
 
-            for (int i = 0; i < options.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {options[i]}");
-            }
-
-            while (true)
-            {
-                try
+                for (int i = 0; i < options.Count; i++)
                 {
-                    Console.WriteLine();
-                    Console.Write("Select an option > ");
-
-                    string input = Console.ReadLine();
-                    int index = int.Parse(input) - 1;
-                    return options[index];
+                    Console.WriteLine($"{i + 1}. {options[i]}");
                 }
-                catch (Exception)
+
+                while (true)
                 {
+                    try
+                    {
+                        Console.WriteLine();
+                        Console.Write("Select an option > ");
 
-                    continue;
+                        string input = Console.ReadLine();
+                        int index = int.Parse(input) - 1;
+                        return options[index];
+                    }
+                    catch (Exception)
+                    {
+
+                        continue;
+                    }
                 }
-            }
 
+            }
         }
     }
 }
