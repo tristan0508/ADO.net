@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Roomates.Models
 {
-    class Roommate
+    public class Roommate
     {
         public int Id { get; set; }
         public string Firstname { get; set; }
