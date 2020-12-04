@@ -4,16 +4,18 @@ using System;
 using System.Collections.Generic;
 
 
-namespace Roomates
+namespace Roommates
 {
-    class Program
+    public class Program
     {
 
         private const string CONNECTION_STRING = @"server=localhost\SQLExpress;database=Roommates;integrated security=true";
 
         static void Main(string[] args)
+            
         {
             RoomRepository roomRepo = new RoomRepository(CONNECTION_STRING);
+            ChoreRepository choreRepo = new ChoreRepository(CONNECTION_STRING);
 
             bool runProgram = true;
             while (runProgram)
@@ -63,6 +65,17 @@ namespace Roomates
                         Console.ReadKey();
                         break;
 
+                    case ("Update a room"):
+                        break;
+
+                    case ("Delete a room"):
+                        DeleteRoom(roomRepo);
+                        break;
+
+                    case ("Add a chore"):
+                        List<Chore> chores = choreRepo.GetAll();
+                        break;
+
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -75,12 +88,12 @@ namespace Roomates
                 Console.Clear();
 
                 List<string> options = new List<string>()
-        {
-            "Show all rooms",
-            "Search for room",
-            "Add a room",
-            "Exit"
-        };
+                {
+                    "Show all rooms",
+                    "Search for room",
+                    "Add a room",
+                    "Exit"
+                };
 
                 for (int i = 0; i < options.Count; i++)
                 {
@@ -106,6 +119,14 @@ namespace Roomates
                 }
 
             }
+        }
+
+       static void DeleteRoom(RoomRepository roomRepo)
+        {
+            Console.WriteLine("What is the ID of the room you want to delete? ");
+            int roomId = int.Parse(Console.ReadLine());
+            roomRepo.Delete(roomId);
+
         }
     }
 }
